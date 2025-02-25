@@ -1,0 +1,26 @@
+<header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+        <a href="index.html" class="logo d-flex align-items-center me-auto">
+            <!-- <img src="assets/images/" alt="" class="rounded-circle"> -->
+            <h1 class="sitename">DIET CRAFT</h1>
+        </a>
+
+        <div [class.mobile-nav-active]="isActive" (click)="hideMobileNav()">
+            <nav class="navmenu">
+                <ul>
+                <li *ngFor="let link of navLinks">
+                    <a [href]="link.url" (click)="hideMobileNav()">{{ link.label }}</a>
+                </li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+
+    <i
+        class="mobile-nav-toggle d-xl-none"
+        [ngClass]="{ 'bi-list': !isActive, 'bi-x': isActive }"
+        (click)="toggleMobileNav()"
+    ></i>
+</header>

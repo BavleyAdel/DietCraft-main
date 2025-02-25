@@ -1,0 +1,150 @@
+<div class="row m-5 card rounded-3 p-5 flex-row">
+  <h1 class="text-center fw-bold">Sign Up</h1>
+  <div class="col-lg-6 card-body">
+    <form (ngSubmit)="signupUser()">
+      <!-- Username -->
+      <div class="mb-4">
+        <label class="form-label" for="username">Username</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-user"></i></span>
+          <input
+            id="username"
+            formControlName="username"
+            class="form-control"
+            placeholder="Type your username"
+          />
+        </div>
+        <div
+          *ngIf="
+            signUpForm.get('username')?.invalid &&
+            signUpForm.get('username')?.touched
+          "
+          class="text-danger"
+        >
+          <small *ngIf="signUpForm.get('username')?.errors?.['required']"
+            >Username is required.</small
+          >
+          <small *ngIf="signUpForm.get('username')?.errors?.['minlength']"
+            >Username must be at least 4 characters long.</small
+          >
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-4">
+        <label class="form-label" for="email">Email</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+          <input
+            id="email"
+            formControlName="email"
+            class="form-control"
+            placeholder="Type your email"
+          />
+        </div>
+        <div
+          *ngIf="
+            signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched
+          "
+          class="text-danger"
+        >
+          <small *ngIf="signUpForm.get('email')?.errors?.['required']"
+            >Email is required.</small
+          >
+          <small *ngIf="signUpForm.get('email')?.errors?.['email']"
+            >Please enter a valid email address.</small
+          >
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-4">
+        <label class="form-label" for="password">Password</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-lock"></i></span>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            class="form-control"
+            placeholder="Type your password"
+          />
+        </div>
+        <div
+          *ngIf="
+            signUpForm.get('password')?.invalid &&
+            signUpForm.get('password')?.touched
+          "
+          class="text-danger"
+        >
+          <small *ngIf="signUpForm.get('password')?.errors?.['required']"
+            >Password is required.</small
+          >
+          <small *ngIf="signUpForm.get('password')?.errors?.['minlength']"
+            >Password must be at least 6 characters long.</small
+          >
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-4">
+        <label class="form-label" for="confirmPassword">Confirm Password</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-key"></i></span>
+          <input
+            id="confirmPassword"
+            type="password"
+            formControlName="confirmPassword"
+            class="form-control"
+            placeholder="Confirm Password"
+          />
+        </div>
+        <div *ngIf="signUpForm.errors?.['mismatch']" class="text-danger">
+          <small>Passwords do not match.</small>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="alert alert-danger text-center">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Terms Checkbox -->
+      <div class="form-check mb-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="form2Example3c"
+          name="checked"
+          formControlName="checked"
+        />
+        <label class="form-check-label" for="form2Example3c">
+          I agree to the <a href="#">Terms of service</a></label
+        >
+      </div>
+
+      <!-- Links & Buttons -->
+      <div class="text-center m-4">
+        <button
+          type="submit"
+          class="btn btn-outline-primary w-100"
+          [disabled]="signUpForm.invalid"
+        >
+          Sign Up
+        </button>
+      </div>
+      <div class="text-center mb-3">
+        Already a member? <a routerLink="/login">Login</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Image Section -->
+  <div class="col-lg-6 align-self-center">
+    <img
+      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+      class="img-fluid"
+      alt="Sample image"
+    />
+  </div>
+</div>
