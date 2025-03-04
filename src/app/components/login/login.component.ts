@@ -22,7 +22,7 @@ export class LoginComponent {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
   }
@@ -33,23 +33,23 @@ export class LoginComponent {
       return;
     }
 
-  //   const user = {
-  //     email: this.loginForm.get('email')?.value,
-  //     password: this.loginForm.get('password')?.value,
-  //   };
+    const user = {
+      email: this.loginForm.get('email')?.value,
+      password: this.loginForm.get('password')?.value,
+    };
 
-  //   this.userService.login(user).subscribe({
-  //     next: (response) => {
-  //       if (response.success) {
-  //         this.userService.setCookie(response.token); // Save the JWT in a cookie
-  //         this.router.navigate(['/home']); // Navigate to home page after successful login
-  //       } else {
-  //         this.errorMessage = response.message; // Display server-side message
-  //       }
-  //     },
-  //     error: (error) => {
-  //       this.errorMessage = error.message; // Display server-side error message
-  //     }
-  //   });
+    this.userService.login(user).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.userService.setCookie(response.token); // Save the JWT in a cookie
+          this.router.navigate(['/home']); // Navigate to home page after successful login
+        } else {
+          this.errorMessage = response.message; // Display server-side message
+        }
+      },
+      error: (error) => {
+        this.errorMessage = error.message; // Display server-side error message
+      }
+    });
   }
 }

@@ -16,6 +16,9 @@ import { StatsComponent } from './components/stats/stats.component';
 import { PreloaderComponent } from './components/preloader/preloader.component';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterLink, RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,11 @@ import { SignupComponent } from './components/signup/signup.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    RouterModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

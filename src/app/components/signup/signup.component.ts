@@ -8,7 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
   selector: 'app-signup',
   standalone: false,
   templateUrl: './signup.component.html',
-  styleUrl: './signup.component.css'
+  styleUrl: './signup.component.css',
 })
 export class SignupComponent {
   signUpForm!: FormGroup;
@@ -22,45 +22,56 @@ export class SignupComponent {
   ) {}
 
   ngOnInit(): void {
-    this.signUpForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required]
-    }, { validator: this.passwordMatchValidator });
+    this.signUpForm = this.fb.group(
+      {
+        username: ['', [Validators.required, Validators.minLength(4)]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', Validators.required],
+        checked: [false, Validators.requiredTrue], // Ensure terms are checked
+      },
+      { validators: this.passwordMatchValidator } // ✅ Apply validator correctly
+    );
   }
 
-  passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { mismatch: true };
+  passwordMatchValidator(formGroup: FormGroup) {
+    const password = formGroup.get('password');
+    const confirmPassword = formGroup.get('confirmPassword');
+
+    if (!password || !confirmPassword) return null;
+
+    return password.value === confirmPassword.value
+      ? confirmPassword.setErrors(null) // ✅ Remove errors if match
+      : confirmPassword.setErrors({ mismatch: true }); // ❌ Add error if mismatch
   }
 
   signupUser(): void {
     if (this.signUpForm.invalid) {
-      this.errorMessage = "Please correct the errors in the form.";
+      this.errorMessage = 'Please correct the errors in the form.';
       return;
     }
 
-    // const user = {
-    //   userName: this.signUpForm.get('username')?.value,
-    //   email: this.signUpForm.get('email')?.value,
-    //   password: this.signUpForm.get('password')?.value,
-    //   confirmPassword: this.signUpForm.get('confirmPassword')?.value
-    // };
+    const user = {
+      userName: this.signUpForm.get('username')?.value,
+      email: this.signUpForm.get('email')?.value,
+      password: this.signUpForm.get('password')?.value,
+    };
 
-    // this.userService.signUp(user).subscribe({
-    //   next: (response) => {
-    //     if (response.success) {
-    //       this.userService.setCookie(response.token); // Save the JWT in a cookie
-    //       this.router.navigate(['/home']); // Navigate to home page after successful login
-    //     } else {
-    //       this.errorMessage = response.message; // Display server-side message
-    //     }
-    //   },
-    //   error: (error) => {
-    //     this.errorMessage = error.message; // Display server-side error message
-    //   }
-    // });
+    this.userService.signUp(user).subscribe({
+      next: (response) => {
+        console.log('Signup Response:', response); // ✅ Debugging log
+        if (response?.success) {
+          // ✅ Use optional chaining to prevent crashes
+          this.cookieService.set('auth_token', response.token || ''); // ✅ Default value
+          this.router.navigate(['/login']);
+        } else {
+          this.errorMessage = response?.message || 'Signup failed'; // ✅ Avoid undefined errors
+        }
+      },
+      error: (error) => {
+        console.error('Signup Error:', error); // ✅ Debugging log
+        this.errorMessage = error?.message || 'An error occurred';
+      },
+    });
   }
 }

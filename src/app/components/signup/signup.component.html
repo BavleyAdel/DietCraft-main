@@ -1,7 +1,7 @@
-<div class="row m-5 card rounded-3 p-5 flex-row">
+<div class="row my-3 card rounded-3 p-5 flex-row w-75 m-auto">
   <h1 class="text-center fw-bold">Sign Up</h1>
   <div class="col-lg-6 card-body">
-    <form (ngSubmit)="signupUser()">
+    <form [formGroup]="signUpForm" (ngSubmit)="signupUser()">
       <!-- Username -->
       <div class="mb-4">
         <label class="form-label" for="username">Username</label>
@@ -14,6 +14,7 @@
             placeholder="Type your username"
           />
         </div>
+
         <div
           *ngIf="
             signUpForm.get('username')?.invalid &&
@@ -21,12 +22,12 @@
           "
           class="text-danger"
         >
-          <small *ngIf="signUpForm.get('username')?.errors?.['required']"
-            >Username is required.</small
-          >
-          <small *ngIf="signUpForm.get('username')?.errors?.['minlength']"
-            >Username must be at least 4 characters long.</small
-          >
+          <small *ngIf="signUpForm.get('username')?.hasError('required')">
+            Username is required.
+          </small>
+          <small *ngIf="signUpForm.get('username')?.errors?.['minlength']">
+            Username must be at least 4 characters long.
+          </small>
         </div>
       </div>
 
@@ -81,7 +82,7 @@
             >Password is required.</small
           >
           <small *ngIf="signUpForm.get('password')?.errors?.['minlength']"
-            >Password must be at least 6 characters long.</small
+            >Password must be at least 8 characters long.</small
           >
         </div>
       </div>
@@ -99,7 +100,10 @@
             placeholder="Confirm Password"
           />
         </div>
-        <div *ngIf="signUpForm.errors?.['mismatch']" class="text-danger">
+        <div
+          *ngIf="signUpForm.controls['confirmPassword']?.errors?.['mismatch'] && signUpForm.controls['confirmPassword']?.touched"
+          class="text-danger"
+        >
           <small>Passwords do not match.</small>
         </div>
       </div>
@@ -142,8 +146,8 @@
   <!-- Image Section -->
   <div class="col-lg-6 align-self-center">
     <img
-      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-      class="img-fluid"
+      src="https://static.vecteezy.com/system/resources/thumbnails/003/689/224/small_2x/online-registration-or-sign-up-login-for-account-on-smartphone-app-user-interface-with-secure-password-mobile-application-for-ui-web-banner-access-cartoon-people-illustration-vector.jpg"
+      class="img-fluid w-100"
       alt="Sample image"
     />
   </div>
