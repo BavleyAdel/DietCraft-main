@@ -19,7 +19,7 @@ export class UserService {
       })
     );
   }
-  
+
   login(user: any): Observable<any> {
     return this.http.post('http://localhost:3000/users/login', user).pipe(
       catchError((error) => {
@@ -52,7 +52,23 @@ export class UserService {
   setCookie(token: string): void {
     this.cookieService.set('jwt', token);
   }
+
   getCookie(): string {
     return this.cookieService.get('jwt');
-  } 
+  }
+
+  addUserInfo(user: any): Observable<any> {
+    return this.http.post('http://localhost:3000/users/userInfo', user).pipe(
+      catchError((error) => {
+        return throwError(
+          () =>
+            new Error(
+              error.error?.msg ||
+                'Adding your information failed. Please try again.'
+            )
+        );
+      })
+    );
+  }
+  
 }

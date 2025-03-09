@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { CookieService } from 'ngx-cookie-service';
+import { IUser } from '../../models/IUser';
 
 @Component({
   selector: 'app-signup',
@@ -13,6 +14,9 @@ import { CookieService } from 'ngx-cookie-service';
 export class SignupComponent {
   signUpForm!: FormGroup;
   errorMessage: string | null = null;
+
+  // Password visibility states
+  passwordFieldType: string = 'password';
 
   constructor(
     private fb: FormBuilder,
@@ -30,11 +34,11 @@ export class SignupComponent {
         confirmPassword: ['', Validators.required],
         checked: [false, Validators.requiredTrue], // Ensure terms are checked
       },
-      { validators: this.passwordMatchValidator } // ✅ Apply validator correctly
+      { validators: this.passwordsMatch } // ✅ Apply validator correctly
     );
   }
 
-  passwordMatchValidator(formGroup: FormGroup) {
+  passwordsMatch(formGroup: FormGroup) {
     const password = formGroup.get('password');
     const confirmPassword = formGroup.get('confirmPassword');
 
@@ -45,14 +49,20 @@ export class SignupComponent {
       : confirmPassword.setErrors({ mismatch: true }); // ❌ Add error if mismatch
   }
 
+  isInvalid(field: string): boolean {
+    return !!(
+      this.signUpForm.get(field)?.invalid && this.signUpForm.get(field)?.touched
+    );
+  }
+
   signupUser(): void {
     if (this.signUpForm.invalid) {
       this.errorMessage = 'Please correct the errors in the form.';
       return;
     }
 
-    const user = {
-      userName: this.signUpForm.get('username')?.value,
+    const user : IUser = {
+      username: this.signUpForm.get('username')?.value,
       email: this.signUpForm.get('email')?.value,
       password: this.signUpForm.get('password')?.value,
     };
@@ -74,4 +84,11 @@ export class SignupComponent {
       },
     });
   }
+
+  // Toggle password visibility
+  toggleVisibility():void {
+    this.passwordFieldType =
+      this.passwordFieldType === 'password' ? 'text' : 'password';
+  }
+
 }

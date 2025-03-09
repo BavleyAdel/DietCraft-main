@@ -19,6 +19,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterLink, RouterModule } from '@angular/router';
+import { UserInfoComponent } from './components/user-info/user-info.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { RouterLink, RouterModule } from '@angular/router';
     PreloaderComponent,
     LoginComponent,
     SignupComponent,
+    UserInfoComponent,
   ],
   imports: [
     BrowserModule,

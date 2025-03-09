@@ -1,6 +1,23 @@
-.input-group:focus,.form-control:focus{
+/* .input-group:focus,.form-control:focus{
     box-shadow: 0 0 20px .1rem #10bc6942;
 }
 .card{
     box-shadow: #10bc6942 1px 1px 20px 3px;
-}
+} */
+.password-container {
+    position: relative;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #ddd;
+    transition: color 0.3s ease;
+  }
+  
+  .toggle-password:hover {
+    color: #333;
+  }
