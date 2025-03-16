@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -8,6 +10,7 @@ import { Component } from '@angular/core';
 })
 export class NavbarComponent {
   isActive = false;
+  isLoggedIn = false;
   navLinks = [
     { label: 'Home', url: '#hero', state: '' },
     { label: 'About', url: '#about', state: '' },
@@ -15,14 +18,23 @@ export class NavbarComponent {
     { label: 'Contact', url: '#footer', state: '' },
   ];
 
+  constructor(private authService: AuthService,private router:Router) {
+    this.authService.getAuthStatus().subscribe((status) => {
+      this.isLoggedIn = status;
+    });
+  }
+
   toggleMobileNav(): void {
     this.isActive = !this.isActive;
-    // document.body.classList.toggle('mobile-nav-active', this.isActive);
   }
 
   hideMobileNav(): void {
     if (this.isActive) {
       this.toggleMobileNav();
     }
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

@@ -94,18 +94,18 @@
               title="Low: Sedentary, Medium: Moderate exercise, High: Heavy exercise"
             ></i>
           </label>
-          <select class="form-select" name="activityLevel" required>
-            <option value="" default>Select option</option>
-            <option value="" *ngFor="let l of activityLevel">{{ l }}</option>
+          <select class="form-select" name="activityLevel" formControlName="activityLevel"  required>
+            <option value="" default disabled>Select option</option>
+            <option value={{l}} *ngFor="let l of activityLevel">{{ l }}</option>
           </select>
         </div>
 
         <!-- Goal -->
         <div class="mb-3">
           <label class="form-label"><i class="fas fa-bullseye"></i> Goal</label>
-          <select class="form-select" name="goal" required>
-            <option value="" default>Select option</option>
-            <option value="" *ngFor="let g of goals">{{ g }}</option>
+          <select class="form-select" name="goal" formControlName="goal" required >
+            <option value="" default disabled>Select option</option>
+            <option *ngFor="let key of goalKeys" [value]="goals[key]">{{ key }}</option>
           </select>
         </div>
 

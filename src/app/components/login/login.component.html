@@ -1,47 +1,76 @@
 <div class="row my-5 card rounded-3 p-5 flex-row w-75 m-auto">
   <h1 class="text-center fw-bold">Log in</h1>
-
+  <!-- Image Section -->
+  <div class="col-lg-6 d-flex align-items-center">
+    <img
+      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+      class="img-fluid rounded"
+      alt="Login illustration"
+    />
+  </div>
   <!-- Login Form Section -->
   <div class="col-lg-6 card-body">
     <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
-      
-      <!-- Email Field -->
-      <div class="mb-4">
-        <label class="form-label" for="email">Email</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-          <input
-            type="email"
-            id="email"
-            formControlName="email"
-            class="form-control"
-            placeholder="Enter your email"
-          />
-        </div>
-
-        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger">
-          <small *ngIf="loginForm.get('email')?.errors?.['required']">* Email is required.</small>
-          <small *ngIf="loginForm.get('email')?.errors?.['email']">* Please enter a valid email address.</small>
+      <!-- Email -->
+      <div class="form-floating mb-4">
+        <input
+          id="email"
+          formControlName="email"
+          class="form-control"
+          placeholder="Email"
+        />
+        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+        <div
+          class="text-danger"
+          *ngIf="
+            loginForm.get('email')?.invalid && loginForm.get('email')?.touched
+          "
+        >
+          <small *ngIf="loginForm.get('email')?.hasError('required')"
+            >Email is required*</small
+          >
+          <small *ngIf="loginForm.get('email')?.hasError('email')"
+            >Invalid email address*</small
+          >
         </div>
       </div>
 
-      <!-- Password Field -->
-      <div class="mb-4">
-        <label class="form-label" for="password">Password</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="fas fa-lock"></i></span>
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            class="form-control"
-            placeholder="Enter your password"
-          />
-        </div>
+      <div class="form-floating mb-4 password-container">
+        <input
+          [type]="passwordFieldType"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          placeholder="Password"
+        />
+        <label for="password"><i class="fas fa-lock"></i> Password</label>
+        <span (click)="toggleVisibility()">
+          <!-- @if ( passwordFieldType === 'password') { 
+            <i class="toggle-password fas fa-eye-slash"></i>
+          }@else{
+            <i class="toggle-password fas fa-eye"></i>
+          } -->
 
-        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
-          <small *ngIf="loginForm.get('password')?.errors?.['required']">* Password is required.</small>
-          <small *ngIf="loginForm.get('password')?.errors?.['minlength']">* Password must be at least 6 characters long.</small>
+          <i
+            class="toggle-password fas"
+            [ngClass]="
+              passwordFieldType === 'password' ? 'fa-eye-slash' : 'fa-eye'
+            "
+          ></i>
+        </span>
+        <div
+          class="text-danger"
+          *ngIf="
+            loginForm.get('password')?.invalid &&
+            loginForm.get('password')?.touched
+          "
+        >
+          <small *ngIf="loginForm.get('password')?.hasError('required')"
+            >Password is required*</small
+          >
+          <small *ngIf="loginForm.get('password')?.hasError('minlength')"
+            >Invalid Password*</small
+          >
         </div>
       </div>
 
@@ -57,24 +86,23 @@
 
       <!-- Buttons -->
       <div class="text-center mt-3">
-        <button type="submit" class="btn btn-outline-primary w-50" [disabled]="loginForm.invalid">
+        <button
+          type="submit"
+          class="btn btn-outline-primary w-50"
+          [disabled]="loginForm.invalid"
+        >
           Log in
         </button>
       </div>
       <div class="text-center mt-3">
-        <button type="button" class="btn btn-outline-success w-50" [routerLink]="['/signup']">
+        <button
+          type="button"
+          class="btn btn-outline-success w-50"
+          [routerLink]="['/signup']"
+        >
           Sign Up
         </button>
       </div>
     </form>
-  </div>
-
-  <!-- Image Section -->
-  <div class="col-lg-6 d-flex align-items-center">
-    <img
-      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-      class="img-fluid rounded"
-      alt="Login illustration"
-    />
   </div>
 </div>

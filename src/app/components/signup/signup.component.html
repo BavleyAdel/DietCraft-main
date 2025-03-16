@@ -71,10 +71,10 @@
           </span>
           <div *ngIf="isInvalid('password')" class="text-danger">
             <small *ngIf="signUpForm.get('password')?.hasError('required')"
-              >Password is required.</small
+              >Password is required*</small
             >
             <small *ngIf="signUpForm.get('password')?.hasError('minlength')"
-              >At least 8 characters.</small
+              >At least 8 characters*</small
             >
           </div>
         </div>
@@ -93,17 +93,15 @@
           >
           <span (click)="toggleVisibility()">
             <i
-              class="toggle-password fas"
-              [ngClass]="
-                passwordFieldType !== 'password' ? 'fa-eye' : 'fa-eye-slash'
-              "
+              class="toggle-password fas {{iClass}}"
+              
             ></i>
           </span>
           <div
             *ngIf="signUpForm.get('confirmPassword')?.errors?.['mismatch'] && signUpForm.get('confirmPassword')?.touched"
-            class="text-danger"
+            class="text-danger ml-3"
           >
-            <small>Passwords do not match.</small>
+            <small>Passwords do not match*</small>
           </div>
         </div>
 

@@ -1,40 +1,97 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, filter, map, switchMap, take} from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   private baseUrl = 'http://localhost:3000';
+  private isRefreshing = false;
+  private accessTokenSubject = new BehaviorSubject<string | null>(null);
 
-  constructor(private http: HttpClient) {}
-
-
-  signup(username: string, email: string, password: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/users/signup`, { username, email, password });
+  constructor(
+    private http: HttpClient,
+    private cookieService: CookieService,
+    private router: Router
+  ) {
+    const storedToken = this.cookieService.get('accessToken') || null;
+    this.accessTokenSubject.next(storedToken);
   }
 
-  login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/users/login`, { email, password });
-  }
-
-  saveToken(token: string): void {
-    localStorage.setItem('token', token);
-  }
-
+  // ✅ Get token from cookies
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return this.cookieService.get('accessToken') || null;
   }
 
-  isLoggedIn(): boolean {
-    return !!this.getToken();
+  // ✅ Store token in cookies and update BehaviorSubject
+  setToken(token: string): void {
+    if (!token) return; // Prevent saving empty tokens
+
+    this.cookieService.set('accessToken', token, {
+      path: '/',
+      secure: true,
+      sameSite: 'Strict',
+      expires: 1, // **Sets expiration (1 day), adjust as needed**
+    });
+
+    this.accessTokenSubject.next(token); // **Notify observers**
   }
 
+  // ✅ Remove token from cookies and BehaviorSubject
   logout(): void {
-    localStorage.removeItem('token');
+    this.cookieService.delete('accessToken', '/');
+    this.cookieService.delete('refreshToken', '/');
+    this.accessTokenSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
+  // ✅ Refresh Token when expired
+  refreshToken(): Observable<string> {
+    if (this.isRefreshing) {
+      return this.accessTokenSubject.pipe(
+        filter((token) => token !== null), // ✅ Ensure it only emits non-null values
+        take(1)
+      ) as Observable<string>;
+    }
 
+    this.isRefreshing = true;
+
+    return this.http
+      .get<any>(`${this.baseUrl}/user/refresh`, { withCredentials: true })
+      .pipe(
+        switchMap((response) => {
+          if (response?.data.accessToken) {
+            console.log(response);
+
+            this.setToken(response.data.accessToken); // ✅ Store updated token
+            this.isRefreshing = false;
+            return new BehaviorSubject(
+              response.data.accessToken
+            ).asObservable(); // ✅ Ensures it's always string
+          } else {
+            this.isRefreshing = false;
+            return throwError(() => new Error('No token received')); // ✅ Prevent null from propagating
+          }
+        }),
+        catchError((error) => {
+          this.isRefreshing = false;
+          this.logout(); // ✅ Logout if refresh fails
+          return throwError(() => error);
+        })
+      );
+  }
+
+  // ✅ Get access token as an observable
+  getAccessTokenObservable(): Observable<string | null> {
+    return this.accessTokenSubject.asObservable();
+  }
+
+  // ✅ Observable for authentication status
+  getAuthStatus(): Observable<boolean> {
+    return this.accessTokenSubject.pipe(map((token) => !!token));
+  }
 }

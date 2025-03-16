@@ -17,6 +17,7 @@ export class SignupComponent {
 
   // Password visibility states
   passwordFieldType: string = 'password';
+  iClass :string ='fa-eye-slash'
 
   constructor(
     private fb: FormBuilder,
@@ -61,7 +62,7 @@ export class SignupComponent {
       return;
     }
 
-    const user : IUser = {
+    const user: IUser = {
       username: this.signUpForm.get('username')?.value,
       email: this.signUpForm.get('email')?.value,
       password: this.signUpForm.get('password')?.value,
@@ -70,25 +71,27 @@ export class SignupComponent {
     this.userService.signUp(user).subscribe({
       next: (response) => {
         console.log('Signup Response:', response); // ✅ Debugging log
-        if (response?.success) {
+        if (response?.message == 'User Created Successfully !') {
           // ✅ Use optional chaining to prevent crashes
-          this.cookieService.set('auth_token', response.token || ''); // ✅ Default value
+          this.cookieService.set('auth_token', response.refreshToken || ''); // ✅ Default value
           this.router.navigate(['/login']);
         } else {
-          this.errorMessage = response?.message || 'Signup failed'; // ✅ Avoid undefined errors
+          this.errorMessage =
+            response?.message ||
+            'Something went wrong with Signing you up, please try again.'; // ✅ Avoid undefined errors
         }
       },
       error: (error) => {
-        console.error('Signup Error:', error); // ✅ Debugging log
-        this.errorMessage = error?.message || 'An error occurred';
+        // console.error('Signup Error:', error); // ✅ Debugging log
+        this.errorMessage = error?.message || 'An error occurred !';
       },
     });
   }
 
   // Toggle password visibility
-  toggleVisibility():void {
+  toggleVisibility(): void {
     this.passwordFieldType =
-      this.passwordFieldType === 'password' ? 'text' : 'password';
+      this.passwordFieldType === "password" ? "text" : "password";
+    this.iClass = this.passwordFieldType === "fa-eye-dash" ? "fa-eye" : "fa-eye-slash";
   }
-
 }
