@@ -1,14 +1,14 @@
-<div class="signup-container">
-  <div class="row card rounded-4 p-5 flex-row w-75 m-auto glassmorphism my-4">
-    <h1 class="text-center fw-bold neon-text">Sign Up</h1>
-    <!-- Image Section -->
-    <div class="col-lg-6 align-self-center">
-      <img
-        src="images/o_bg-remover-gen_2u5IwwwQj1hQelsS0JMFivnPLvr.png"
-        class="img-fluid rounded-3"
-        alt="Sign Up Illustration"
-      />
+<div class="auth-wrapper">
+  <div class="auth-content">
+    <div class="auth-bg">
+      <span class="r"></span>
+      <span class="r s"></span>
+      <span class="r s"></span>
+      <span class="r"></span>
     </div>
+    <div class="row card rounded-4 p-3 flex-row w-100 m-auto glassmorphism my-4 justify-content-center">
+      <i class="fa fa-user-plus my-2 pt-3"></i>
+      <h3 class="text-center my-3">Sign Up</h3>
 
     <!-- Sign-Up Form -->
     <div class="col-lg-6 card-body">
@@ -112,7 +112,7 @@
             type="checkbox"
             formControlName="checked"
           />
-          <label class="form-check-label"
+          <label class="form-check-label text-muted"
             >I agree to the <a href="#">Terms of Service</a></label
           >
         </div>
@@ -134,7 +134,9 @@
         </div>
 
         <div class="text-center">
-          Already a member? <a routerLink="/login">Login</a>
+         <p class="text-muted">
+           Already a member? <a routerLink="/login">Login</a>
+         </p>
         </div>
       </form>
     </div>
